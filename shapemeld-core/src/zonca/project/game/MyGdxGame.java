@@ -2,6 +2,7 @@ package zonca.project.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -12,9 +13,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import zonca.project.common.InputReader;
 import zonca.project.common.StateMachine;
+import zonca.project.game.screens.GameOver;
 import zonca.project.game.screens.MainGame;
 import zonca.project.game.screens.MainMenu;
 import zonca.project.game.screens.PauseMenu;
+import zonca.project.game.states.GameOverState;
 import zonca.project.game.states.GameState;
 import zonca.project.game.states.MainGameState;
 import zonca.project.game.states.MainMenuState;
@@ -32,6 +35,7 @@ public class MyGdxGame extends Game
    private InputReader theInputReader;
    private Stage theStage;
    private MainMenu theMainMenu;
+   private GameOver theGameOver;
         
    @Override
    public void create()
@@ -39,8 +43,9 @@ public class MyGdxGame extends Game
       theSpriteBatch = new SpriteBatch();
       theShapeRenderer = new ShapeRenderer();
       theShapeRenderer.setAutoShapeType(true);
-      
-      theFont = new BitmapFont();
+
+      theFont = new BitmapFont(Gdx.files.internal("default.fnt"), false);
+      theFont.setColor(Color.BLACK);
       
       theCamera = new OrthographicCamera();
       theCamera.setToOrtho(false, 400, 800);
@@ -52,8 +57,10 @@ public class MyGdxGame extends Game
       theMainMenu = new MainMenu(this);
       theMainGame = new MainGame(this);
       thePauseMenu = new PauseMenu(this);
+      theGameOver = new GameOver(this);
 
       theStateMachine.register(GameState.MAIN_MENU, new MainMenuState(this));
+      theStateMachine.register(GameState.GAME_OVER, new GameOverState(this));
       theStateMachine.register(GameState.MAIN_GAME, new MainGameState(this));
       theStateMachine.register(GameState.PAUSED, new PausedState(this));
       
@@ -63,6 +70,7 @@ public class MyGdxGame extends Game
       Gdx.input.setCatchBackKey(true);
 
       theShapeRenderer.setProjectionMatrix(theCamera.combined);
+      theSpriteBatch.setProjectionMatrix(theCamera.combined);
       
    }
    
@@ -70,6 +78,7 @@ public class MyGdxGame extends Game
    public void resize(int width, int height)
    {
       theShapeRenderer.setProjectionMatrix(theCamera.combined);
+      theSpriteBatch.setProjectionMatrix(theCamera.combined);
       theStage.getViewport().update(width, height);
    }
 
@@ -80,17 +89,10 @@ public class MyGdxGame extends Game
       Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
       
       theInputReader.update();
-      
-      theSpriteBatch.begin();
-      theShapeRenderer.begin();
-      
       theStateMachine.update();
       
       theStage.act();
       theStage.draw();
-
-      theSpriteBatch.end();
-      theShapeRenderer.end();
       
       super.render();
    }
@@ -151,5 +153,10 @@ public class MyGdxGame extends Game
    public Stage getStage()
    {
       return theStage;
+   }
+
+   public GameOver getGameOver()
+   {
+      return theGameOver;
    }
 }

@@ -33,9 +33,14 @@ public class MainGameState implements State
    @Override
    public void update()
    {
-      theMainGame.processInputs();
+      theMainGame.update();
+      
       theMainGame.render();
 
+      if (theMainGame.isGameFinished())
+      {
+         theStateMachine.enterState(GameState.GAME_OVER);
+      }
       if (theInputReader.isBackPressed())
       {
          theStateMachine.enterState(GameState.PAUSED);

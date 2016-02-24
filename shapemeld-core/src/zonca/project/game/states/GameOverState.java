@@ -1,28 +1,27 @@
 package zonca.project.game.states;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import zonca.project.common.InputReader;
 import zonca.project.common.State;
 import zonca.project.common.StateMachine;
 import zonca.project.game.MyGdxGame;
+import zonca.project.game.screens.GameOver;
 import zonca.project.game.screens.MainGame;
-import zonca.project.game.screens.MainMenu;
 
-public class MainMenuState implements State
+public class GameOverState implements State
 {
    private final StateMachine<GameState> theParentMachine;
-   private final MainMenu theMainMenu;
-   private final Stage theStage;
-   private final InputReader theInputReader;
    private final MainGame theMainGame;
+   private final InputReader theInputReader;
+   private final Stage theStage;
+   private final GameOver theGameOver;
    
-   public MainMenuState(MyGdxGame game)
+   public GameOverState(MyGdxGame game)
    {
       theStage = game.getStage();
-      theMainMenu = game.getMainMenu();
       theMainGame = game.getMainGame();
+      theGameOver = game.getGameOver();
       theParentMachine = game.getStateMachine();
       theInputReader = game.getInputReader();
    }
@@ -31,22 +30,19 @@ public class MainMenuState implements State
    public void enter()
    {
       theStage.clear();
-      theMainMenu.init();
+      theGameOver.init();
    }
 
    @Override
    public void update()
    {
-      theMainMenu.render();
+      theMainGame.render();
+      theGameOver.render();
       
-      if (theMainMenu.isStartButtonClicked())
+      if (theInputReader.isBackPressed() || theGameOver.isQuitButtonClicked())
       {
-         theMainGame.reset();
-         theParentMachine.enterState(GameState.MAIN_GAME);
-      }
-      else if (theInputReader.isBackPressed() || theMainMenu.isQuitButtonClicked())
-      {
-         Gdx.app.exit();
+         theParentMachine.enterState(GameState.MAIN_MENU);
       }
    }
+
 }

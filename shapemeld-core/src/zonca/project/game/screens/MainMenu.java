@@ -46,13 +46,14 @@ public class MainMenu
       Gdx.gl.glEnable(GL20.GL_BLEND);
       Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
       
+      theShapeRenderer.begin();
       theShapeRenderer.set(ShapeType.Filled);
       theShapeRenderer.setColor(new Color(1, 1, 1, 1));
       theShapeRenderer.rect(0, 0, theCamera.viewportWidth, theCamera.viewportHeight);
 
       theShapeRenderer.setColor(new Color(.05f, .05f, .05f, 1.0f));
       theShapeRenderer.rect(40, 300, theCamera.viewportWidth - 80, 250);
-      theShapeRenderer.flush();
+      theShapeRenderer.end();
 
       Gdx.gl.glDisable(GL20.GL_BLEND);
    }

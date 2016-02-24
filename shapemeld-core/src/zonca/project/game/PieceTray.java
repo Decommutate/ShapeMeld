@@ -2,6 +2,7 @@ package zonca.project.game;
 
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -52,6 +53,7 @@ public class PieceTray
       }
 
       theShapeRenderer.set(ShapeType.Line);
+      Gdx.gl.glLineWidth(5);
       for (int i = 0; i < thePieces.size(); i++)
       {
          float x = 40 + ((i % 3) * 130);
@@ -59,6 +61,8 @@ public class PieceTray
          theShapeRenderer.setColor(thePieces.get(i).isSelected() ? Color.ORANGE : Color.BLACK);
          theShapeRenderer.circle(x + 25, y + 50, 60);
       }
+      theShapeRenderer.flush();
+      Gdx.gl.glLineWidth(1);
    }
 
    public void handleInput(Vector3 touchPos)

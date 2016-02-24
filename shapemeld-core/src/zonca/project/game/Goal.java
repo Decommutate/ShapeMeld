@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -34,7 +35,10 @@ public class Goal
       }
 
       renderer.set(ShapeType.Line);
+      Gdx.gl.glLineWidth(5);
       renderer.circle(x + 25, y + 50, 60);
+      renderer.flush();
+      Gdx.gl.glLineWidth(1);
    }
 
    public boolean isSolved()
@@ -65,5 +69,10 @@ public class Goal
       {
          theSolution.add(theRandom.nextInt(thePieces.size()));
       }
+   }
+
+   public int getPieceCount()
+   {
+      return theSolution.size();
    }
 }

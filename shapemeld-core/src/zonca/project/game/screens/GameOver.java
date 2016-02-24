@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import zonca.project.game.MyGdxGame;
 
-public class PauseMenu
+public class GameOver
 {
    private static final float BUTTON_WIDTH = 250;
    private static final float BUTTON_HEIGHT = 60;
@@ -24,19 +24,20 @@ public class PauseMenu
    private final ShapeRenderer theShapeRenderer;
    private final Stage theStage;
    private final OrthographicCamera theCamera;
-   protected boolean theResumeButtonClicked;
+   private final MainGame theMainGame;
+   
    protected boolean theQuitButtonClicked;
 
-   public PauseMenu(MyGdxGame game)
+   public GameOver(MyGdxGame game)
    {
       theCamera = game.getCamera();
       theShapeRenderer = game.getShapeRenderer();
       theStage = game.getStage();
+      theMainGame = game.getMainGame();
    }
-   
+
    public void init()
    {
-      theResumeButtonClicked = false;
       theQuitButtonClicked = false;
       setupStage();
    }
@@ -58,6 +59,11 @@ public class PauseMenu
       Gdx.gl.glDisable(GL20.GL_BLEND);
    }
 
+   public boolean isQuitButtonClicked()
+   {
+      return theQuitButtonClicked;
+   }
+
    private void setupStage()
    {
       float width = 400;
@@ -66,28 +72,16 @@ public class PauseMenu
 
       Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-      // label "welcome"
-      Label welcomeLabel = new Label("Paused", skin);
-      welcomeLabel.setX((width - welcomeLabel.getWidth()) / 2);
-      welcomeLabel.setY(currentY + 100);
-      theStage.addActor(welcomeLabel);
+      Label gameOverLabel = new Label("Game Over", skin);
+      gameOverLabel.setX((width - gameOverLabel.getWidth()) / 2);
+      gameOverLabel.setY(currentY + 100);
+      theStage.addActor(gameOverLabel);
 
-      // button "start game"
-      TextButton resumeButton = new TextButton("Resume", skin);
-      resumeButton.setX(buttonX);
-      resumeButton.setY(currentY);
-      resumeButton.setWidth(BUTTON_WIDTH);
-      resumeButton.setHeight(BUTTON_HEIGHT);
-      resumeButton.addListener(new ChangeListener() {
-         @Override
-         public void changed(ChangeEvent event, Actor actor)
-         {
-            theResumeButtonClicked = true;
-         } 
-      });
-      theStage.addActor(resumeButton);
+      Label scoreLabel = new Label("Score: " + theMainGame.getScore(), skin);
+      scoreLabel.setX((width - scoreLabel.getWidth()) / 2);
+      scoreLabel.setY(currentY + 70);
+      theStage.addActor(scoreLabel);
 
-      // button "options"
       TextButton quitButton = new TextButton("Quit", skin);
       quitButton.setX(buttonX);
       quitButton.setY(currentY - BUTTON_HEIGHT - BUTTON_SPACING);
@@ -103,13 +97,4 @@ public class PauseMenu
       theStage.addActor(quitButton);
    }
 
-   public boolean isResumeButtonClicked()
-   {
-      return theResumeButtonClicked;
-   }
-
-   public boolean isQuitButtonClicked()
-   {
-      return theQuitButtonClicked;
-   }
 }
